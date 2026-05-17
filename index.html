@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Desktop Pet Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-primary: #006A6A;
+    --md-on-primary: #ffffff;
+    --md-primary-container: #9CF1F0;
+    --md-on-primary-container: #002020;
+    --md-secondary: #4A6363;
+    --md-secondary-container: #CCE8E7;
+    --md-on-secondary-container: #051F1F;
+    --md-tertiary: #4B607C;
+    --md-tertiary-container: #D3E4FF;
+    --md-surface: #F4FAFA;
+    --md-surface-variant: #DAE5E4;
+    --md-on-surface: #161D1D;
+    --md-on-surface-variant: #3F4948;
+    --md-outline: #6F797A;
+    --md-outline-variant: #BEC9C8;
+    --md-surface-1: #EBF4F3;
+    --md-surface-2: #E3F0EF;
+    --md-surface-3: #DAECEb;
+    --md-surface-tint: rgba(0,106,106,0.08);
+    --md-error: #BA1A1A;
+    --md-shadow: rgba(0,0,0,0.12);
+    --elev-1: 0 1px 2px rgba(0,0,0,0.10), 0 1px 3px 1px rgba(0,0,0,0.07);
+    --elev-2: 0 1px 2px rgba(0,0,0,0.10), 0 2px 6px 2px rgba(0,0,0,0.08);
+    --elev-3: 0 4px 8px 3px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+    --md-primary: #4DD9D8;
+    --md-on-primary: #003737;
+    --md-primary-container: #004F4F;
+    --md-on-primary-container: #9CF1F0;
+    --md-secondary: #B0CCCC;
+    --md-secondary-container: #314B4B;
+    --md-on-secondary-container: #CCE8E7;
+    --md-tertiary: #AFC6E9;
+    --md-tertiary-container: #334869;
+    --md-surface: #0E1414;
+    --md-surface-variant: #3F4948;
+    --md-on-surface: #DDE4E3;
+    --md-on-surface-variant: #BEC9C8;
+    --md-outline: #899392;
+    --md-outline-variant: #3F4948;
+    --md-surface-1: #161E1E;
+    --md-surface-2: #1A2424;
+    --md-surface-3: #1E2929;
+    --md-surface-tint: rgba(77,217,216,0.08);
+    --md-error: #FFB4AB;
+    --md-shadow: rgba(0,0,0,0.4);
+    --elev-1: 0 1px 2px rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.20);
+    --elev-2: 0 1px 2px rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.25);
+    --elev-3: 0 4px 8px 3px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.35);
+    }
+  }
+  :root {
+    --motion-standard: cubic-bezier(0.2, 0, 0, 1);
+    --motion-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  .top-app-bar {
+    width: 100%;
+    background: var(--md-surface-1);
+    box-shadow: var(--elev-1);
+    padding: 12px 16px 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .top-app-bar .app-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--md-primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .top-app-bar .titles {
+    flex: 1;
+  }
+  .top-app-bar h1 {
+    font-family: 'Google Sans Display', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--md-on-surface);
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .top-app-bar .subtitle {
+    font-size: 12px;
+    color: var(--md-on-surface-variant);
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.5px;
+    margin-top: 1px;
+  }
+  .content {
+    width: 100%;
+    max-width: 480px;
+    padding: 16px 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .md-card {
+    background: var(--md-surface-1);
+    border-radius: 28px;
+    box-shadow: var(--elev-1);
+    overflow: hidden;
+    transition: box-shadow 200ms var(--motion-standard);
+  }
+  .md-card:hover { box-shadow: var(--elev-2); }
+  .display-card {
+    background: var(--md-surface-2);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    border-radius: 28px;
+    box-shadow: var(--elev-2);
+  }
+  .display-card-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .display-card-header .label {
+    font-size: 11px;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--md-on-surface-variant);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .display-card-header .chip {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .screen-container {
+    position: relative;
+    border-radius: 16px;
+    background: #000;
+    padding: 10px;
+    box-shadow:
+      0 0 0 1.5px rgba(0,0,0,0.3),
+      0 8px 24px rgba(0,0,0,0.35),
+      inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .screen-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  canvas {
+    display: block;
+    border-radius: 6px;
+    image-rendering: pixelated;
+    position: relative;
+    z-index: 0;
+  }
+  .state-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--md-secondary-container);
+    border-radius: 100px;
+    padding: 6px 14px 6px 10px;
+    transition: all 250ms var(--motion-standard);
+  }
+  .state-chip .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--md-primary);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+  .state-chip span {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--md-on-secondary-container);
+    letter-spacing: 0.5px;
+  }
+  .hold-progress-wrap {
+    width: 100%;
+    height: 4px;
+    background: var(--md-outline-variant);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .hold-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--md-primary), var(--md-tertiary));
+    border-radius: 4px;
+    transition: none;
+  }
+  .fab-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .fab-touch {
+    position: relative;
+    border-radius: 16px;
+    background: var(--md-primary-container);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 40px;
+    box-shadow: var(--elev-3);
+    transition: all 180ms var(--motion-emphasized);
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fab-touch .fab-label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--md-on-primary-container);
+    text-transform: uppercase;
+  }
+  .fab-touch::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--md-primary);
+    opacity: 0;
+    border-radius: inherit;
+    transition: opacity 200ms;
+  }
+  .fab-touch:active::after,
+  .fab-touch.pressed::after {
+    opacity: 0.12;
+  }
+  .fab-touch:active,
+  .fab-touch.pressed {
+    transform: scale(0.97);
+    box-shadow: var(--elev-1);
+    background: var(--md-primary-container);
+  }
+  .info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .info-card {
+    background: var(--md-surface-variant);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .info-card .info-label {
+    font-size: 11px;
+    color: var(--md-on-surface-variant);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .info-card .info-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--md-on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .instructions-card {
+    background: var(--md-tertiary-container);
+    border-radius: 20px;
+    padding: 16px 20px;
+  }
+  .instructions-card .instr-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .instructions-card .instr-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+  }
+  .instructions-card .instr-badge {
+    background: rgba(75,96,124,0.18);
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
+    color: var(--md-tertiary);
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 60px;
+    text-align: center;
+  }
+  .instructions-card .instr-desc {
+    font-size: 12px;
+    color: var(--md-on-surface-variant);
+    line-height: 1.4;
+  }
+  .bottom-hint {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 4px;
+  }
+  .bottom-hint .home-pill {
+    width: 48px;
+    height: 5px;
+    background: var(--md-outline-variant);
+    border-radius: 3px;
+  }
+  .press-feedback {
+    font-size: 12px;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--md-on-surface-variant);
+    letter-spacing: 0.5px;
+    text-align: center;
+    min-height: 18px;
+    transition: color 200ms;
+  }
+  .press-feedback.active {
+    color: var(--md-primary);
+  }
+</style>
+</head>
+<body>
+<div class="top-app-bar">
+  <div class="titles">
+    <h1>Desktop Pet</h1>
+    <div class="subtitle">Oled Explorer</div>
+  </div>
+</div>
+<div class="content">
+  <div class="md-card display-card">
+    <div class="screen-container">
+      <canvas id="oled" width="256" height="128"></canvas>
+    </div>
+    <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div class="hold-progress-wrap">
+        <div class="hold-bar" id="holdBar"></div>
+      </div>
+      <div class="fab-section">
+        <div class="fab-touch" id="touchBtn"
+          onmousedown="touchDown()" onmouseup="touchUp()" onmouseleave="touchUp()">
+          <span class="fab-label">TOUCH</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<span id="stateBadge" style="display:none"></span>
+<span id="infoState" style="display:none"></span>
+<span id="infoPressType" style="display:none"></span>
+<script>
+const SCALE = 2;
+const W = 128, H = 64;
+const canvas = document.getElementById('oled');
+const ctx = canvas.getContext('2d');
+let pixBuf = new Uint8Array(W * H);
+function pset(x, y, v) {
+  if (x < 0 || x >= W || y < 0 || y >= H) return;
+  pixBuf[y * W + x] = v ? 1 : 0;
+}
+function pget(x, y) {
+  if (x < 0 || x >= W || y < 0 || y >= H) return 0;
+  return pixBuf[y * W + x];
+}
+function clearBuf() { pixBuf.fill(0); }
+function flushDisplay() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W * SCALE, H * SCALE);
+  ctx.fillStyle = '#00e5ff';
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      if (pixBuf[y * W + x]) {
+        ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
+      }
+    }
+  }
+}
+function drawPixel(x, y, c) { pset(x, y, c); }
+function fillRect(x, y, w, h, c) {
+  for (let dy = 0; dy < h; dy++)
+    for (let dx = 0; dx < w; dx++)
+      pset(x+dx, y+dy, c);
+}
+function drawRect(x, y, w, h, c) {
+  for (let dx = 0; dx < w; dx++) { pset(x+dx, y, c); pset(x+dx, y+h-1, c); }
+  for (let dy = 0; dy < h; dy++) { pset(x, y+dy, c); pset(x+w-1, y+dy, c); }
+}
+function drawLine(x0, y0, x1, y1, c) {
+  let dx = Math.abs(x1-x0), dy = Math.abs(y1-y0);
+  let sx = x0<x1?1:-1, sy = y0<y1?1:-1;
+  let err = dx - dy;
+  while(true) {
+    pset(x0, y0, c);
+    if (x0===x1 && y0===y1) break;
+    let e2 = 2*err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 <  dx) { err += dx; y0 += sy; }
+  }
+}
+function drawCircle(cx, cy, r, c) {
+  let x = r, y = 0, err = 0;
+  while (x >= y) {
+    pset(cx+x,cy+y,c); pset(cx+y,cy+x,c);
+    pset(cx-y,cy+x,c); pset(cx-x,cy+y,c);
+    pset(cx-x,cy-y,c); pset(cx-y,cy-x,c);
+    pset(cx+y,cy-x,c); pset(cx+x,cy-y,c);
+    y++; err += 1+2*y;
+    if (2*(err-x)+1 > 0) { x--; err += 1-2*x; }
+  }
+}
+function fillCircle(cx, cy, r, c) {
+  for (let dy = -r; dy <= r; dy++)
+    for (let dx = -r; dx <= r; dx++)
+      if (dx*dx+dy*dy <= r*r) pset(cx+dx, cy+dy, c);
+}
+function fillRoundRect(x, y, w, h, r, c) {
+  fillRect(x+r, y, w-2*r, h, c);
+  fillRect(x, y+r, r, h-2*r, c);
+  fillRect(x+w-r, y+r, r, h-2*r, c);
+  fillCircle(x+r, y+r, r, c);
+  fillCircle(x+w-1-r, y+r, r, c);
+  fillCircle(x+r, y+h-1-r, r, c);
+  fillCircle(x+w-1-r, y+h-1-r, r, c);
+}
+function drawRoundRect(x, y, w, h, r, c) {
+  drawLine(x+r, y, x+w-1-r, y, c);
+  drawLine(x+r, y+h-1, x+w-1-r, y+h-1, c);
+  drawLine(x, y+r, x, y+h-1-r, c);
+  drawLine(x+w-1, y+r, x+w-1, y+h-1-r, c);
+  let cx0=x+r, cy0=y+r, cx1=x+w-1-r, cy1=y+h-1-r;
+  let xi=r,yi=0,err=0;
+  while(xi>=yi){
+    pset(cx1+xi,cy0-yi,c); pset(cx1+yi,cy0-xi,c);
+    pset(cx0-yi,cy0-xi,c); pset(cx0-xi,cy0-yi,c);
+    pset(cx0-xi,cy1+yi,c); pset(cx0-yi,cy1+xi,c);
+    pset(cx1+yi,cy1+xi,c); pset(cx1+xi,cy1+yi,c);
+    yi++; err+=1+2*yi;
+    if(2*(err-xi)+1>0){xi--;err+=1-2*xi;}
+  }
+}
+function fillTriangle(x0,y0,x1,y1,x2,y2,c) {
+  let pts = [[x0,y0],[x1,y1],[x2,y2]].sort((a,b)=>a[1]-b[1]);
+  let [ax,ay]=[pts[0][0],pts[0][1]],[bx,by]=[pts[1][0],pts[1][1]],[cx2,cy2]=[pts[2][0],pts[2][1]];
+  function interp(y,x0,y0,x1,y1){
+    if(y1===y0) return x0;
+    return x0+(x1-x0)*(y-y0)/(y1-y0);
+  }
+  for(let y=ay;y<=cy2;y++){
+    let xa=Math.round(interp(y,ax,ay,cx2,cy2));
+    let xb=y<by?Math.round(interp(y,ax,ay,bx,by)):Math.round(interp(y,bx,by,cx2,cy2));
+    if(xa>xb){let t=xa;xa=xb;xb=t;}
+    for(let x=xa;x<=xb;x++) pset(x,y,c);
+  }
+}
+const FONT5x7 = {
+  ' ':[0,0,0,0,0],'!':[0,0,0x5f,0,0],'"':[0,7,0,7,0],'#':[0x14,0x7f,0x14,0x7f,0x14],
+  '$':[0x24,0x2a,0x7f,0x2a,0x12],'%':[0x23,0x13,0x08,0x64,0x62],'&':[0x36,0x49,0x55,0x22,0x50],
+  "'":[0,5,3,0,0],'(':[0,0x1c,0x22,0x41,0],')':[0,0x41,0x22,0x1c,0],
+  '*':[0x14,0x08,0x3e,0x08,0x14],'+':[0x08,0x08,0x3e,0x08,0x08],',':[0,0x50,0x30,0,0],
+  '-':[0x08,0x08,0x08,0x08,0x08],'.':[0,0x60,0x60,0,0],'/':[0x20,0x10,0x08,0x04,0x02],
+  '0':[0x3e,0x51,0x49,0x45,0x3e],'1':[0,0x42,0x7f,0x40,0],'2':[0x42,0x61,0x51,0x49,0x46],
+  '3':[0x21,0x41,0x45,0x4b,0x31],'4':[0x18,0x14,0x12,0x7f,0x10],'5':[0x27,0x45,0x45,0x45,0x39],
+  '6':[0x3c,0x4a,0x49,0x49,0x30],'7':[0x01,0x71,0x09,0x05,0x03],'8':[0x36,0x49,0x49,0x49,0x36],
+  '9':[0x06,0x49,0x49,0x29,0x1e],':':[0,0x36,0x36,0,0],';':[0,0x56,0x36,0,0],
+  '<':[0x08,0x14,0x22,0x41,0],'=':[0x14,0x14,0x14,0x14,0x14],'>':[0,0x41,0x22,0x14,0x08],
+  '?':[0x02,0x01,0x51,0x09,0x06],'@':[0x32,0x49,0x79,0x41,0x3e],
+  'A':[0x7e,0x11,0x11,0x11,0x7e],'B':[0x7f,0x49,0x49,0x49,0x36],'C':[0x3e,0x41,0x41,0x41,0x22],
+  'D':[0x7f,0x41,0x41,0x22,0x1c],'E':[0x7f,0x49,0x49,0x49,0x41],'F':[0x7f,0x09,0x09,0x09,0x01],
+  'G':[0x3e,0x41,0x49,0x49,0x7a],'H':[0x7f,0x08,0x08,0x08,0x7f],'I':[0,0x41,0x7f,0x41,0],
+  'J':[0x20,0x40,0x41,0x3f,0x01],'K':[0x7f,0x08,0x14,0x22,0x41],'L':[0x7f,0x40,0x40,0x40,0x40],
+  'M':[0x7f,0x02,0x0c,0x02,0x7f],'N':[0x7f,0x04,0x08,0x10,0x7f],'O':[0x3e,0x41,0x41,0x41,0x3e],
+  'P':[0x7f,0x09,0x09,0x09,0x06],'Q':[0x3e,0x41,0x51,0x21,0x5e],'R':[0x7f,0x09,0x19,0x29,0x46],
+  'S':[0x46,0x49,0x49,0x49,0x31],'T':[0x01,0x01,0x7f,0x01,0x01],'U':[0x3f,0x40,0x40,0x40,0x3f],
+  'V':[0x1f,0x20,0x40,0x20,0x1f],'W':[0x3f,0x40,0x38,0x40,0x3f],'X':[0x63,0x14,0x08,0x14,0x63],
+  'Y':[0x07,0x08,0x70,0x08,0x07],'Z':[0x61,0x51,0x49,0x45,0x43],
+  '[':[0,0x7f,0x41,0x41,0],'\\':[0x02,0x04,0x08,0x10,0x20],']':[0,0x41,0x41,0x7f,0],
+  '^':[0x04,0x02,0x01,0x02,0x04],'_':[0x40,0x40,0x40,0x40,0x40],'`':[0,0x01,0x02,0x04,0],
+  'a':[0x20,0x54,0x54,0x54,0x78],'b':[0x7f,0x48,0x44,0x44,0x38],'c':[0x38,0x44,0x44,0x44,0x20],
+  'd':[0x38,0x44,0x44,0x48,0x7f],'e':[0x38,0x54,0x54,0x54,0x18],'f':[0x08,0x7e,0x09,0x01,0x02],
+  'g':[0x0c,0x52,0x52,0x52,0x3e],'h':[0x7f,0x08,0x04,0x04,0x78],'i':[0,0x44,0x7d,0x40,0],
+  'j':[0x20,0x40,0x44,0x3d,0],'k':[0x7f,0x10,0x28,0x44,0],'l':[0,0x41,0x7f,0x40,0],
+  'm':[0x7c,0x04,0x18,0x04,0x78],'n':[0x7c,0x08,0x04,0x04,0x78],'o':[0x38,0x44,0x44,0x44,0x38],
+  'p':[0x7c,0x14,0x14,0x14,0x08],'q':[0x08,0x14,0x14,0x18,0x7c],'r':[0x7c,0x08,0x04,0x04,0x08],
+  's':[0x48,0x54,0x54,0x54,0x20],'t':[0x04,0x3f,0x44,0x40,0x20],'u':[0x3c,0x40,0x40,0x20,0x7c],
+  'v':[0x1c,0x20,0x40,0x20,0x1c],'w':[0x3c,0x40,0x30,0x40,0x3c],'x':[0x44,0x28,0x10,0x28,0x44],
+  'y':[0x0c,0x50,0x50,0x50,0x3c],'z':[0x44,0x64,0x54,0x4c,0x44],
+  '{':[0x08,0x36,0x41,0],'|':[0,0,0x7f,0,0],'}':[0,0x41,0x36,0x08,0],'~':[0x08,0x04,0x08,0x10,0x08],
+};
+function setCursor(x,y){textX=x;textY=y;}
+function setTextSize(s){textSize=s;}
+function setTextColor(c){textColor=c;}
+let textX=0,textY=0,textSize=1,textColor=1;
+function printChar(ch) {
+  const glyph = FONT5x7[ch] || FONT5x7[' '];
+  const S = textSize;
+  const W5 = 5*S, H7 = 7*S, gap = S;
+  for (let col = 0; col < 5; col++) {
+    let colData = glyph[col];
+    for (let row = 0; row < 7; row++) {
+      if (colData & (1 << row)) {
+        fillRect(textX + col*S, textY + row*S, S, S, textColor ? 1 : 0);
+      }
+    }
+  }
+  textX += W5 + gap;
+}
+function printStr(s) { for (let i = 0; i < s.length; i++) printChar(s[i]); }
+function print(v) { printStr(String(v)); }
+let menuState = 0;
+let eyeExpression = 0;
+let inFaceManager = false;
+let selectedFace = 0;
+const FACE_COUNT = 7;
+const faceNames = ['Normal','Love','Triangle','Look Up','Sleep','Angry','Surprised'];
+let inMediaMenu = false;
+let selectedMedia = 0;
+let inSettingsMenu = false;
+let selectedSetting = 0;
+let buzzerEnabled = true;
+let autoSwitch = false;
+let inStopwatch = false;
+let swRunning = false;
+let swStartTime = 0;
+let swElapsed = 0;
+let inPong = false;
+let pongLost = false;
+let ballX=64,ballY=32,ballDX=2.2,ballDY=1.5;
+let playerY=32,aiY=32;
+const PAD_H=16,PAD_W=3;
+let pongScore=0;
+let paddleGoingDown=true;
+let inXO = false;
+let xoBoard = new Uint8Array(9);
+let xoCursor=0, xoGameOver=false, xoWinner=0, xoPlayerTurn=true;
+let xoAiDelay=0, xoAiThinking=false;
+let inSensors = false;
+let currentTemp = 24.5;
+let currentPressure = 1013;
+let inScreensaver = false;
+let screensaverSelected = 0;
+let screensaverMode = -1;
+let ssSelecting = true;
+const SS_COUNT = 17;
+const ssNames = [
+  'Bouncing Balls','Rain','Stars','Snake','Matrix','Fireworks','Ripples',
+  'Maze','Plasma','Clock','Lissajous','Spiral','Warp','Equalizer',
+  'Game of Life','Sand','Pendulum'
+];
+let inScreenOff = false;
+let launcherTile = 0;
+let launcherApp = 0;
+const LAUNCHER_TILES = 4;
+const LAUNCHER_APPS = 8;
+const launcherAppNames = ['MEDIA','PONG','X & O','TIMER','SENSORS','SCRNSAVER','SETTINGS','OFF'];
+let currentX=0,currentY=0,targetX=0,targetY=0;
+let lastBlink=0,lastUpdate=0,lastAutoSwitch=0;
+const eyeWidth=42,eyeHeight=36,cornerRadius=12;
+const baseLeftX=16,baseRightX=70,baseY=14;
+let ssBalls = [{x:30,y:20,dx:1.8,dy:1.4,r:3},{x:80,y:40,dx:-2.1,dy:1.2,r:4},{x:60,y:15,dx:1.5,dy:-1.8,r:5}];
+let ssRainY=[],ssRainLen=[];
+let ssStars=[];
+let ssSnakeX=[],ssSnakeY=[],ssSnakeLen=8,ssSnakeDir=0,ssSnakeFoodX=60,ssSnakeFoodY=20,ssSnakeLast=0;
+let ssMatrixY=[],ssMatrixLast=0;
+let ssParticles=[],ssFireLast=0;
+let ssRipples=[],ssRippleLast=0;
+let ssPlasmaT=0,ssPlasmeLast=0;
+let ssClockSec=0,ssClockLast=0;
+let ssLissT=0,ssLissLast=0,ssLissX=new Array(80).fill(64),ssLissY=new Array(80).fill(32),ssLissHead=0;
+let ssSpiralT=0,ssSpiralLast=0;
+let ssWarpStars=[],ssWarpLast=0;
+let ssEqH=[],ssEqTarget=[],ssEqLast=0;
+const GOL_W=32,GOL_H=16;
+let ssGolGrid=[],ssGolNext=[],ssGolLast=0,ssGolGen=0;
+const SAND_GW=64,SAND_GH=32;
+let ssSandGrid2=[],ssSandLast=0,ssSandSpawn=0;
+let ssPendA1=2.0,ssPendA2=2.5,ssPendV1=0,ssPendV2=0,ssPendLast=0;
+let ssPendTX=new Array(60).fill(64),ssPendTY=new Array(60).fill(20),ssPendTHead=0;
+const MAZE_COLS=16,MAZE_ROWS=8;
+let ssMazeWalls=[],ssMazeVisited=[],ssMazeStkX=[],ssMazeStkY=[],ssMazeStkTop=0,ssMazeGenDone=false,ssMazeLast=0;
+let ssMazeCurX=0,ssMazeCurY=0,ssMazeCurDir=0,ssMazeCurLast=0;
+function rnd(a,b){return Math.floor(Math.random()*(b-a))+a;}
+function rndF(a,b){return Math.random()*(b-a)+a;}
+let touchStartTime = 0;
+let longPressTriggered = false;
+let touchActive = false;
+let holdBarInterval = null;
+const holdBar = document.getElementById('holdBar');
+const stateBadge = document.getElementById('stateBadge');
+const infoState = document.getElementById('infoState');
+const infoPressType = document.getElementById('infoPressType');
+const pressFeedback = { textContent: '', classList: { add: ()=>{}, remove: ()=>{} } };
+function updateBadge() {
+  let s = '';
+  if (inScreenOff)       s = 'SCREEN OFF';
+  else if (inFaceManager) s = 'FACE MANAGER';
+  else if (inMediaMenu)   s = 'MEDIA';
+  else if (inSettingsMenu)s = 'SETTINGS';
+  else if (inStopwatch)   s = 'STOPWATCH';
+  else if (inPong)        s = 'PONG';
+  else if (inXO)          s = 'X & O';
+  else if (inSensors)     s = 'SENSORS';
+  else if (inScreensaver) s = ssSelecting ? 'SCREENSAVER — SELECT' : 'SS: ' + ssNames[screensaverMode];
+  else if (menuState===0) s = 'FACE — ' + faceNames[eyeExpression].toUpperCase();
+  else if (menuState===1) s = 'LAUNCHER T' + launcherTile;
+  stateBadge.textContent = s;
+  infoState.textContent = s;
+}
+function touchDown() {
+  if (touchActive) return;
+  touchActive = true;
+  touchStartTime = Date.now();
+  longPressTriggered = false;
+  document.getElementById('touchBtn').classList.add('pressed');
+  infoPressType.textContent = 'HOLDING...';
+  pressFeedback.textContent = 'Ții apăsat...';
+  pressFeedback.classList.add('active');
+  let progress = 0;
+  holdBarInterval = setInterval(() => {
+    progress = Math.min(1, (Date.now() - touchStartTime) / 700);
+    holdBar.style.width = (progress * 100) + '%';
+    if (progress >= 1 && !longPressTriggered) {
+      longPressTriggered = true;
+      clearInterval(holdBarInterval);
+      holdBarInterval = null;
+      infoPressType.textContent = 'LONG PRESS';
+      pressFeedback.textContent = 'Long press! ✓';
+      doLongPress();
+    }
+  }, 20);
+}
+function touchUp() {
+  if (!touchActive) return;
+  touchActive = false;
+  document.getElementById('touchBtn').classList.remove('pressed');
+  if (holdBarInterval) { clearInterval(holdBarInterval); holdBarInterval = null; }
+  holdBar.style.width = '0%';
+  pressFeedback.classList.remove('active');
+  if (!longPressTriggered) {
+    infoPressType.textContent = 'TAP';
+    pressFeedback.textContent = 'Tap! ✓';
+    setTimeout(() => { pressFeedback.textContent = 'Gata'; }, 800);
+    doTap();
+  } else {
+    infoPressType.textContent = 'READY';
+    setTimeout(() => { pressFeedback.textContent = 'Gata'; }, 800);
+  }
+  longPressTriggered = false;
+  updateBadge();
+}
+function doTap() {
+  if (inScreenOff) {
+    inScreenOff = false; menuState = 1; launcherTile = 0; launcherApp = 0;
+  } else if (inScreensaver) {
+    if (ssSelecting) { screensaverSelected = (screensaverSelected + 1) % SS_COUNT; }
+    else { inScreensaver = false; menuState = 1; }
+  } else if (inXO) {
+    if (xoGameOver) { xoReset(); }
+    else if (xoPlayerTurn) {
+      let next = xoCursor;
+      for (let k=1;k<=9;k++) { next=(xoCursor+k)%9; if(xoBoard[next]===0) break; }
+      xoCursor = next;
+    }
+  } else if (inPong) {
+    if (pongLost) {
+      pongLost=false; pongScore=0;
+      ballX=64;ballY=32;ballDX=2.2;ballDY=1.5;
+      playerY=32;aiY=32;paddleGoingDown=true;
+    }
+  } else if (inStopwatch) {
+    if (swRunning) { swElapsed+=Date.now()-swStartTime; swRunning=false; }
+    else { swStartTime=Date.now(); swRunning=true; }
+  } else if (inFaceManager) {
+    selectedFace = (selectedFace+1) % FACE_COUNT;
+    drawFaceManager();
+  } else if (inMediaMenu) {
+    selectedMedia = (selectedMedia+1) % 6;
+  } else if (inSettingsMenu) {
+    selectedSetting = (selectedSetting+1) % 3;
+  } else if (inSensors) {
+    currentTemp = 20 + Math.random()*15;
+    currentPressure = 1000 + rnd(0,40);
+  } else if (menuState === 0) {
+    menuState = 1; launcherTile = 0; launcherApp = 0;
+  } else if (menuState === 1) {
+    if (launcherApp === 0) { launcherApp = 1; }
+    else if (launcherTile < LAUNCHER_TILES-1) { launcherTile++; launcherApp = 0; }
+    else { menuState = 0; launcherTile = 0; launcherApp = 0; }
+  }
+  updateBadge();
+}
+function doLongPress() {
+  if (inFaceManager) {
+    eyeExpression = selectedFace; inFaceManager = false;
+  } else if (menuState === 0) {
+    inFaceManager = true; selectedFace = eyeExpression; drawFaceManager();
+  } else if (inXO) {
+    if (xoGameOver) { inXO=false; menuState=1; }
+    else if (xoPlayerTurn && xoBoard[xoCursor]===0) {
+      xoBoard[xoCursor]=1; xoWinner=xoCheckWinner();
+      if (xoWinner) { xoGameOver=true; }
+      else { xoPlayerTurn=false; xoAiThinking=true; xoAiDelay=Date.now()+500; }
+    }
+  } else if (inSensors) {
+    inSensors=false; menuState=1;
+  } else if (inStopwatch) {
+    if (swRunning) { swRunning=false; swElapsed=0; swStartTime=0; }
+    else { inStopwatch=false; menuState=1; }
+  } else if (inPong && pongLost) {
+    inPong=false; menuState=1;
+  } else if (inScreensaver) {
+    if (ssSelecting) {
+      screensaverMode = screensaverSelected; ssSelecting = false; initScreensaverMode(screensaverMode);
+    } else { ssSelecting=true; screensaverMode=-1; }
+  } else if (inSettingsMenu) {
+    if (selectedSetting===0) buzzerEnabled=!buzzerEnabled;
+    else if (selectedSetting===1) autoSwitch=!autoSwitch;
+    else { inSettingsMenu=false; menuState=1; }
+  } else if (inMediaMenu) {
+    if (selectedMedia===5) { inMediaMenu=false; menuState=1; }
+  } else if (menuState === 1) {
+    let appId = launcherTile*2 + launcherApp;
+    if (appId === 0) { inMediaMenu=true; selectedMedia=0; }
+    else if (appId===1) { inPong=true; pongLost=false; pongScore=0; ballX=64;ballY=32;ballDX=2.2;ballDY=1.5; playerY=32;aiY=32;paddleGoingDown=true; }
+    else if (appId===2) { inXO=true; xoReset(); }
+    else if (appId===3) { inStopwatch=true; swRunning=false; swElapsed=0; }
+    else if (appId===4) { inSensors=true; }
+    else if (appId===5) { inScreensaver=true; ssSelecting=true; screensaverSelected=0; screensaverMode=-1; }
+    else if (appId===6) { inSettingsMenu=true; selectedSetting=0; }
+    else if (appId===7) { inScreenOff=true; clearBuf(); flushDisplay(); }
+  }
+  updateBadge();
+}
+function drawEyeShape(x, y, h) {
+  let offset = Math.floor((eyeHeight - h) / 2);
+  if (eyeExpression === 0) {
+    fillRoundRect(x, y+offset, eyeWidth, h, cornerRadius, 1);
+  } else if (eyeExpression === 1) {
+    fillCircle(x+12, y+12, 11, 1); fillCircle(x+30, y+12, 11, 1);
+    fillTriangle(x+2,y+18, x+40,y+18, x+21,y+35, 1);
+  } else if (eyeExpression === 2) {
+    fillTriangle(x+21,y, x,y+36, x+42,y+36, 1);
+    fillTriangle(x+21,y+10, x+10,y+36, x+32,y+36, 0);
+  } else if (eyeExpression === 3) {
+    fillRoundRect(x, y+10, eyeWidth, eyeHeight-10, cornerRadius, 1);
+    fillCircle(x+21, y+25, 15, 0);
+    fillRect(x, y+25, 42, 15, 0);
+  } else if (eyeExpression === 4) {
+    fillRoundRect(x+4, y+Math.floor(eyeHeight/2)-3, eyeWidth-8, 7, 3, 1);
+  } else if (eyeExpression === 5) {
+    let isLeft = (x < 50);
+    fillRoundRect(x, y+6, eyeWidth, eyeHeight-6, 6, 1);
+    if (isLeft) { fillTriangle(x+Math.floor(eyeWidth/2),y+6, x+eyeWidth+1,y+6, x+eyeWidth+1,y+24, 0); }
+    else { fillTriangle(x-1,y+6, x+Math.floor(eyeWidth/2),y+6, x-1,y+24, 0); }
+  } else if (eyeExpression === 6) {
+    fillCircle(x+Math.floor(eyeWidth/2), y+Math.floor(eyeHeight/2), Math.floor(eyeHeight/2), 1);
+    fillCircle(x+Math.floor(eyeWidth/2), y+Math.floor(eyeHeight/2), 7, 0);
+    fillCircle(x+Math.floor(eyeWidth/2)+3, y+Math.floor(eyeHeight/2)-3, 3, 1);
+  }
+}
+function drawFaceExtras(xOff) {
+  if (eyeExpression === 4) {
+    let zx=xOff+88,zy=4;
+    setTextColor(1); setTextSize(1);
+    setCursor(zx,zy+10); print('z');
+    setCursor(zx+7,zy+4); print('z');
+    setTextSize(2); setCursor(zx+14,zy-2); print('Z');
+  }
+}
+function drawFaceManager() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  setTextSize(1); setTextColor(0);
+  setCursor(4,3); print('(^_^)');
+  setCursor(38,3); print('FACE MANAGER');
+  const ROW_H=14, START_Y=14;
+  for (let slot=0;slot<3;slot++) {
+    let idx=selectedFace-1+slot;
+    if(idx<0||idx>=FACE_COUNT) continue;
+    let y=START_Y+slot*ROW_H;
+    let isSel=(slot===1);
+    if(isSel) fillRoundRect(0,y,128,ROW_H-1,2,1);
+    let col=isSel?0:1;
+    setTextColor(col); setTextSize(1);
+    setCursor(4,y+3); print(idx+1); print('.');
+    setCursor(18,y+3); print(faceNames[idx]);
+    let px=90,py=y+3;
+    if(idx===0){fillRoundRect(px,py,12,7,2,col);fillRoundRect(px+15,py,12,7,2,col);}
+    else if(idx===1){fillCircle(px+3,py+2,3,col);fillCircle(px+8,py+2,3,col);fillTriangle(px,py+4,px+11,py+4,px+5,py+8,col);fillCircle(px+18,py+2,3,col);fillCircle(px+23,py+2,3,col);fillTriangle(px+15,py+4,px+26,py+4,px+20,py+8,col);}
+    else if(idx===2){fillTriangle(px+6,py,px,py+8,px+12,py+8,col);fillTriangle(px+21,py,px+15,py+8,px+27,py+8,col);}
+    else if(idx===3){fillRoundRect(px,py+3,12,5,2,col);fillRoundRect(px+15,py+3,12,5,2,col);}
+    else if(idx===4){fillRoundRect(px+1,py+3,10,3,1,col);fillRoundRect(px+16,py+3,10,3,1,col);}
+    else if(idx===5){fillRoundRect(px,py+2,12,6,1,col);fillTriangle(px+6,py+2,px+12,py+2,px+12,py+6,isSel?1:0);fillRoundRect(px+15,py+2,12,6,1,col);fillTriangle(px+15,py+2,px+21,py+2,px+15,py+6,isSel?1:0);}
+    else if(idx===6){drawCircle(px+6,py+4,5,col);drawCircle(px+21,py+4,5,col);}
+    if(isSel){let ax=116,ay=y+4;fillTriangle(ax,ay,ax,ay+5,ax+4,ay+2,0);}
+  }
+  drawLine(0,56,128,56,1);
+  setTextSize(1);setTextColor(1);
+  setCursor(4,58);print('TAP=NEXT  HOLD=SELECT');
+  flushDisplay();
+}
+function drawLauncherAppIcon(appId,cx,cy,col) {
+  if(appId===0){let x=cx-16, y=cy-10;drawRoundRect(x,y,32,20,2,col);fillCircle(x+8,y+13,4,col);fillCircle(x+23,y+13,4,col);fillRect(x+2,y+2,28,6,col);fillRect(x+6,y+2,20,6,0);}
+  else if(appId===1){let x=cx-15,y=cy-10;fillRect(x,y+3,2,14,col);fillRect(x+28,y+3,2,14,col);fillCircle(x+15,y+10,2,col);drawLine(x,y,x+30,y,col);drawLine(x,y+20,x+30,y+20,col);}
+  else if(appId===2){let x=cx-9,y=cy-9;const CS=6;drawLine(x+CS,y,x+CS,y+CS*3,col);drawLine(x+CS*2,y,x+CS*2,y+CS*3,col);drawLine(x,y+CS,x+CS*3,y+CS,col);drawLine(x,y+CS*2,x+CS*3,y+CS*2,col);let cx2=x+Math.floor(CS/2),cy2=y+Math.floor(CS/2),m=2;drawLine(cx2-m,cy2-m,cx2+m,cy2+m,col);drawLine(cx2+m,cy2-m,cx2-m,cy2+m,col);drawCircle(x+CS+Math.floor(CS/2),y+CS+Math.floor(CS/2),2,col);cx2=x+CS*2+Math.floor(CS/2);cy2=y+CS*2+Math.floor(CS/2);drawLine(cx2-m,cy2-m,cx2+m,cy2+m,col);drawLine(cx2+m,cy2-m,cx2-m,cy2+m,col);}
+  else if(appId===3){let x=cx-12,y=cy-8;drawCircle(x+12,y+15,12,col);drawLine(x+9,y+1,x+15,y+1,col);drawLine(x+12,y+1,x+12,y+4,col);drawLine(x+12,y+4,x+12,y+10,col);drawPixel(x+18,y+5,col);drawPixel(x+19,y+6,col);}
+  else if(appId===4){drawRoundRect(cx-14,cy-7,5,14,2,col);fillCircle(cx-12,cy+9,4,col);fillRect(cx-13,cy-4,3,10,col);drawCircle(cx+8,cy,8,col);drawCircle(cx+8,cy,2,col);drawLine(cx+8,cy,cx+12,cy-5,col);}
+  else if(appId===5){let x=cx-15,y=cy-10;drawRoundRect(x,y,30,20,2,col);drawLine(x+10,y+20,x+8,y+24,col);drawLine(x+20,y+20,x+22,y+24,col);drawLine(x+6,y+24,x+24,y+24,col);fillCircle(x+15,y+10,4,col);drawLine(x+15,y+4,x+15,y+6,col);drawLine(x+15,y+14,x+15,y+16,col);drawLine(x+9,y+10,x+11,y+10,col);drawLine(x+19,y+10,x+21,y+10,col);}
+  else if(appId===6){drawCircle(cx,cy,8,col);drawCircle(cx,cy,3,col);for(let i=0;i<8;i++){let rad=i*Math.PI/4;drawLine(cx+Math.round(Math.cos(rad)*8),cy+Math.round(Math.sin(rad)*8),cx+Math.round(Math.cos(rad)*11),cy+Math.round(Math.sin(rad)*11),col);}}
+  else if(appId===7){drawCircle(cx,cy+2,7,col);drawCircle(cx,cy+2,6,col);fillRect(cx-1,cy-9,3,8,col);fillRect(cx-2,cy-5,5,6,col===0?1:0);}
+}
+function drawLauncherTile(tile, selApp, xOffset) {
+  const ICON_Y=22, LABEL_Y=43;
+  for (let slot=0;slot<2;slot++) {
+    let appId=tile*2+slot;
+    if(appId>=LAUNCHER_APPS) continue;
+    let cx=xOffset+32+slot*64;
+    let isSel=(slot===selApp);
+    if(isSel){fillRoundRect(xOffset+slot*64+2,2,60,53,4,1);drawLauncherAppIcon(appId,cx,ICON_Y,0);setTextColor(0);}
+    else{drawRoundRect(xOffset+slot*64+2,2,60,53,4,1);drawLauncherAppIcon(appId,cx,ICON_Y,1);setTextColor(1);}
+    setTextSize(1);
+    let name=launcherAppNames[appId];
+    let labelLen=name.length*6;
+    setCursor(cx-Math.floor(labelLen/2),LABEL_Y);
+    print(name);
+  }
+  const DOT_R=2,DOT_SPACING=8;
+  let dotsStartX=64-Math.floor((LAUNCHER_TILES-1)*DOT_SPACING/2);
+  for(let d=0;d<LAUNCHER_TILES;d++){
+    let dx=dotsStartX+d*DOT_SPACING,dy=59;
+    if(d===tile) fillCircle(dx,dy,DOT_R,1);
+    else drawCircle(dx,dy,DOT_R,1);
+  }
+}
+function drawSettingsMenu() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  {let gx=3,gy=2;drawPixel(gx+2,gy,0);drawPixel(gx+4,gy,0);drawLine(gx+1,gy+1,gx+6,gy+1,0);drawLine(gx,gy+2,gx+7,gy+2,0);fillRect(gx+1,gy+3,2,2,0);fillRect(gx+5,gy+3,2,2,0);drawLine(gx,gy+5,gx+7,gy+5,0);drawLine(gx+1,gy+6,gx+6,gy+6,0);drawPixel(gx+2,gy+7,0);drawPixel(gx+4,gy+7,0);}
+  setTextSize(1);setTextColor(0);setCursor(16,3);print('SETTINGS');setCursor(78,3);print('TAP/HOLD');
+  drawLine(0,13,128,13,1);
+  const ROW_H=16,START_Y=15;
+  for(let i=0;i<3;i++){
+    let y=START_Y+i*ROW_H;let sel=(i===selectedSetting);
+    if(sel) fillRoundRect(0,y,128,ROW_H-1,2,1);
+    let col=sel?0:1;setTextColor(col);setTextSize(1);setCursor(18,y+4);
+    if(i===0){fillRect(3,y+3,3,6,col);fillRect(6,y+2,2,8,col);fillRect(8,y+1,2,10,col);drawPixel(11,y+4,col);drawPixel(11,y+6,col);drawPixel(12,y+3,col);drawPixel(12,y+7,col);print('BUZZER');}
+    else if(i===1){drawLine(4,y+3,8,y+1,col);drawLine(8,y+1,12,y+3,col);drawPixel(10,y+1,col);drawPixel(12,y+1,col);drawPixel(12,y+3,col);drawLine(4,y+7,8,y+9,col);drawLine(8,y+9,12,y+7,col);drawPixel(4,y+7,col);drawPixel(4,y+9,col);drawPixel(6,y+9,col);print('AUTO SWITCH');}
+    else{drawRect(3,y+1,7,10,col);drawLine(11,y+5,14,y+5,col);drawLine(13,y+3,15,y+5,col);drawLine(13,y+7,15,y+5,col);drawLine(7,y+3,7,y+7,col);print('EXIT');}
+    if(i<2){let st=(i===0)?buzzerEnabled:autoSwitch;let mx=114,my=y+3;if(st){drawLine(mx,my+5,mx+3,my+8,col);drawLine(mx+3,my+8,mx+8,my+2,col);drawLine(mx,my+6,mx+3,my+9,col);drawLine(mx+3,my+9,mx+8,my+3,col);}else{drawLine(mx,my+1,mx+8,my+9,col);drawLine(mx+1,my+1,mx+9,my+9,col);drawLine(mx+8,my+1,mx,my+9,col);drawLine(mx+9,my+1,mx+1,my+9,col);}}
+    if(sel&&i===2){let ax=116,ay=y+5;fillTriangle(ax,ay,ax,ay+5,ax+4,ay+2,0);}
+  }
+  flushDisplay();
+}
+function drawMediaMenu() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  drawRoundRect(3,2,16,10,1,0);fillCircle(7,8,2,0);fillCircle(14,8,2,0);fillRect(4,3,14,3,0);fillRect(6,3,10,3,1);
+  setTextSize(1);setTextColor(0);setCursor(22,3);print('MEDIA');setCursor(72,3);print('TAP/HOLD');
+  drawLine(0,13,128,13,1);
+  const btnW=42,btnH=25,startX=1,startY=14;
+  for(let i=0;i<6;i++){
+    let col2=i%3,row=Math.floor(i/3);
+    let x=startX+col2*btnW,y=startY+row*btnH;
+    let sel=(i===selectedMedia);
+    if(sel) fillRoundRect(x,y,btnW-1,btnH-1,3,1);
+    else drawRoundRect(x,y,btnW-1,btnH-1,3,1);
+    let c=sel?0:1;let ix=x+14,iy=y+7;
+    if(i===0){fillRect(ix,iy+1,2,9,c);fillTriangle(ix+11,iy+1,ix+11,iy+9,ix+5,iy+5,c);fillTriangle(ix+6,iy+1,ix+6,iy+9,ix+2,iy+5,c);}
+    else if(i===1){fillTriangle(ix,iy+1,ix,iy+9,ix+5,iy+5,c);fillRect(ix+7,iy+1,2,9,c);fillRect(ix+10,iy+1,2,9,c);}
+    else if(i===2){fillRect(ix+10,iy+1,2,9,c);fillTriangle(ix,iy+1,ix,iy+9,ix+6,iy+5,c);fillTriangle(ix+5,iy+1,ix+5,iy+9,ix+9,iy+5,c);}
+    else if(i===3){fillRect(ix,iy+3,3,5,c);fillRect(ix+3,iy+2,2,7,c);fillRect(ix+5,iy,2,11,c);drawLine(ix+8,iy+5,ix+12,iy+5,c);}
+    else if(i===4){fillRect(ix,iy+3,3,5,c);fillRect(ix+3,iy+2,2,7,c);fillRect(ix+5,iy,2,11,c);drawLine(ix+8,iy+5,ix+12,iy+5,c);drawLine(ix+10,iy+3,ix+10,iy+7,c);}
+    else{drawLine(ix,iy,ix+8,iy+8,c);drawLine(ix+1,iy,ix+9,iy+8,c);drawLine(ix+8,iy,ix,iy+8,c);drawLine(ix+9,iy,ix+1,iy+8,c);}
+  }
+  flushDisplay();
+}
+function drawStopwatch() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  drawCircle(9,8,4,0);drawLine(7,3,11,3,0);drawLine(9,3,9,5,0);drawLine(9,5,9,8,0);
+  setTextSize(1);setTextColor(0);setCursor(18,3);print('TIMER');
+  drawLine(0,13,128,13,1);
+  let elapsed=swElapsed;
+  if(swRunning) elapsed+=Date.now()-swStartTime;
+  let totalSec=Math.floor(elapsed/1000);
+  let hh=Math.floor(totalSec/3600);
+  let mm=Math.floor((totalSec%3600)/60);
+  let ss2=totalSec%60;
+  let buf=pad2(hh)+':'+pad2(mm)+':'+pad2(ss2);
+  setTextColor(1);setTextSize(2);setCursor(16,28);print(buf);
+  setTextSize(1);
+  if(swRunning){setCursor(10,52);print('TAP=STOP  HOLD=RESET');}
+  else{setCursor(10,52);print('TAP=START HOLD=EXIT');}
+  flushDisplay();
+}
+function pad2(n){return n<10?'0'+n:''+n;}
+function drawSensors() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  drawRoundRect(3,2,4,8,1,0);fillCircle(5,11,2,0);fillRect(4,4,2,6,0);
+  setTextSize(1);setTextColor(0);setCursor(12,3);print('SENSORS');
+  drawLine(0,13,128,13,1);
+  drawRoundRect(4,17,7,18,3,1);fillCircle(7,37,5,1);fillRect(6,21,3,14,1);
+  setTextSize(3);setCursor(18,17);setTextColor(1);print(Math.round(currentTemp)+'');
+  drawCircle(74,19,2,1);setTextSize(2);setCursor(79,22);print('C');
+  drawLine(0,43,128,43,1);
+  drawCircle(10,54,7,1);drawCircle(10,54,2,1);drawLine(10,54,15,48,1);
+  setTextSize(1);setCursor(22,48);print(''+Math.round(currentPressure));
+  setCursor(22,57);print('hPa');
+  flushDisplay();
+}
+function drawPong() {
+  clearBuf();
+  if(pongLost){
+    setTextColor(1);setTextSize(2);setCursor(28,8);print('YOU');setCursor(28,26);print('LOST');
+    setTextSize(1);setCursor(10,52);print('TAP=RETRY HOLD=EXIT');
+    flushDisplay();return;
+  }
+  drawLine(0,0,128,0,1);drawLine(0,63,128,63,1);
+  for(let yy=2;yy<62;yy+=5) fillRect(63,yy,2,3,1);
+  setTextSize(2);setTextColor(1);setCursor(44,2);print(''+pongScore);setCursor(72,2);print('AI');
+  fillRect(1,playerY-Math.floor(PAD_H/2),PAD_W,PAD_H,1);
+  fillRect(124,aiY-Math.floor(PAD_H/2),PAD_W,PAD_H,1);
+  fillRect(Math.round(ballX)-2,Math.round(ballY)-2,4,4,1);
+  flushDisplay();
+}
+function updatePong() {
+  if(pongLost) return;
+  let aiSpeed=2;
+  if(aiY<ballY-2) aiY=Math.min(aiY+aiSpeed,62-Math.floor(PAD_H/2));
+  if(aiY>ballY+2) aiY=Math.max(aiY-aiSpeed,2+Math.floor(PAD_H/2));
+  ballX+=ballDX;ballY+=ballDY;
+  if(ballY<=2){ballY=2;ballDY=Math.abs(ballDY);}
+  if(ballY>=62){ballY=62;ballDY=-Math.abs(ballDY);}
+  if(ballX<=6&&ballDX<0){if(ballY>=playerY-PAD_H/2-3&&ballY<=playerY+PAD_H/2+3){ballX=7;ballDX=Math.min(Math.abs(ballDX)*1.04,4.5);ballDY+=(Math.random()-0.5)*1.2;}}
+  if(ballX>=122&&ballDX>0){if(ballY>=aiY-PAD_H/2-3&&ballY<=aiY+PAD_H/2+3){ballX=121;ballDX=-Math.min(Math.abs(ballDX)*1.04,4.5);ballDY+=(Math.random()-0.5)*1.2;}}
+  if(ballX>128){pongScore++;ballX=64;ballY=32;ballDX=-2.2;ballDY=1.5;}
+  if(ballX<0){pongLost=true;}
+  if(paddleGoingDown){playerY+=2;if(playerY+PAD_H/2>=62){playerY=62-PAD_H/2;paddleGoingDown=false;}}
+  else{playerY-=2;if(playerY-PAD_H/2<=2){playerY=2+PAD_H/2;paddleGoingDown=true;}}
+}
+function xoReset() { xoBoard=new Uint8Array(9);xoCursor=0;xoGameOver=false;xoWinner=0;xoPlayerTurn=true;xoAiThinking=false; }
+function xoCheckWinner() {
+  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for(let l of lines){let [a,b,c]=l;if(xoBoard[a]&&xoBoard[a]===xoBoard[b]&&xoBoard[b]===xoBoard[c]) return xoBoard[a];}
+  let full=true;for(let i=0;i<9;i++) if(!xoBoard[i]){full=false;break;}
+  return full?3:0;
+}
+function xoAiMove() {
+  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for(let l of lines){let cntO=0,emptyIdx=-1;for(let j of l){if(xoBoard[j]===2)cntO++;else if(xoBoard[j]===0)emptyIdx=j;}if(cntO===2&&emptyIdx>=0) return emptyIdx;}
+  for(let l of lines){let cntX=0,emptyIdx=-1;for(let j of l){if(xoBoard[j]===1)cntX++;else if(xoBoard[j]===0)emptyIdx=j;}if(cntX===2&&emptyIdx>=0) return emptyIdx;}
+  if(!xoBoard[4]) return 4;
+  for(let c of [0,2,6,8]) if(!xoBoard[c]) return c;
+  for(let i=0;i<9;i++) if(!xoBoard[i]) return i;
+  return -1;
+}
+function drawXO() {
+  clearBuf();
+  const SX=37,SY=5,CS=18;
+  setTextSize(1);setTextColor(1);
+  setCursor(2,2);print('X&O');
+  if(!xoGameOver){
+    setCursor(1,16);
+    if(xoPlayerTurn){print('YOUR');setCursor(1,25);print('TURN');setCursor(4,36);print('X');}
+    else{print('AI');setCursor(1,25);print('THINK');}
+    setCursor(0,50);print('TAP=');setCursor(0,58);print('MOVE');
+  } else {
+    if(xoWinner===1){setCursor(1,14);print('YOU');setCursor(1,23);print('WIN!');}
+    else if(xoWinner===2){setCursor(1,14);print('AI');setCursor(1,23);print('WIN!');}
+    else{setCursor(1,14);print('DRAW');}
+    setCursor(0,40);print('TAP=');setCursor(0,49);print('PLAY');setCursor(0,57);print('HLD=X');
+  }
+  drawLine(SX+CS,SY,SX+CS,SY+CS*3,1);drawLine(SX+CS*2,SY,SX+CS*2,SY+CS*3,1);
+  drawLine(SX,SY+CS,SX+CS*3,SY+CS,1);drawLine(SX,SY+CS*2,SX+CS*3,SY+CS*2,1);
+  drawRect(SX,SY,CS*3,CS*3,1);
+  for(let i=0;i<9;i++){
+    let col2=i%3,row=Math.floor(i/3);
+    let cx=SX+col2*CS+Math.floor(CS/2),cy=SY+row*CS+Math.floor(CS/2);
+    if(!xoGameOver&&xoPlayerTurn&&i===xoCursor) drawRoundRect(SX+col2*CS+2,SY+row*CS+2,CS-4,CS-4,2,1);
+    if(xoBoard[i]===1){let m=4;drawLine(cx-m,cy-m,cx+m,cy+m,1);drawLine(cx-m+1,cy-m,cx+m,cy+m-1,1);drawLine(cx+m,cy-m,cx-m,cy+m,1);drawLine(cx+m-1,cy-m,cx-m,cy+m-1,1);}
+    else if(xoBoard[i]===2){drawCircle(cx,cy,5,1);drawCircle(cx,cy,6,1);}
+  }
+  flushDisplay();
+}
+function drawScreensaverSelection() {
+  clearBuf();
+  fillRect(0,0,128,13,1);
+  drawRoundRect(3,1,11,8,1,0);drawLine(6,9,5,11,0);drawLine(8,9,9,11,0);drawLine(4,11,10,11,0);
+  setTextSize(1);setTextColor(0);setCursor(18,3);print('SCREENSAVER');
+  drawLine(0,13,128,13,1);
+  const ROW_H=14,START_Y=14;
+  for(let slot=0;slot<3;slot++){
+    let idx=screensaverSelected-1+slot;
+    if(idx<0||idx>=SS_COUNT) continue;
+    let y=START_Y+slot*ROW_H;
+    let isSel=(slot===1);
+    if(isSel) fillRoundRect(0,y,128,ROW_H-1,2,1);
+    let col=isSel?0:1;
+    setTextColor(col);setTextSize(1);
+    setCursor(4,y+3);print(idx+1);print('.');
+    setCursor(18,y+3);print(ssNames[idx]);
+    if(isSel){let ax=116,ay=y+4;fillTriangle(ax,ay,ax,ay+5,ax+4,ay+2,0);}
+  }
+  drawLine(0,56,128,56,1);
+  setTextSize(1);setTextColor(1);setCursor(4,58);print('TAP=NEXT  HOLD=START');
+  flushDisplay();
+}
+function initScreensaverMode(mode) {
+  if(mode===0){ssBalls=[{x:rnd(10,118),y:rnd(10,54),dx:(rnd(0,2)?1.8:-1.8)+rnd(-5,6)*0.1,dy:(rnd(0,2)?1.4:-1.4)+rnd(-5,6)*0.1,r:3},{x:rnd(10,118),y:rnd(10,54),dx:(rnd(0,2)?1.8:-1.8)+rnd(-5,6)*0.1,dy:(rnd(0,2)?1.4:-1.4)+rnd(-5,6)*0.1,r:4},{x:rnd(10,118),y:rnd(10,54),dx:(rnd(0,2)?1.8:-1.8)+rnd(-5,6)*0.1,dy:(rnd(0,2)?1.4:-1.4)+rnd(-5,6)*0.1,r:5}];}
+  else if(mode===1){ssRainY=[];ssRainLen=[];for(let i=0;i<16;i++){ssRainY.push(rnd(0,64));ssRainLen.push(rnd(4,12));}}
+  else if(mode===2){ssStars=[];for(let i=0;i<20;i++) ssStars.push({x:rnd(0,128),y:rnd(0,64),speed:1+i%3});}
+  else if(mode===3){ssSnakeLen=8;ssSnakeDir=0;ssSnakeX=[];ssSnakeY=[];for(let i=0;i<ssSnakeLen;i++){ssSnakeX.push(20-i*4);ssSnakeY.push(32);}ssSnakeFoodX=rnd(5,120);ssSnakeFoodY=rnd(5,58);ssSnakeLast=Date.now();}
+  else if(mode===4){ssMatrixY=[];for(let i=0;i<16;i++) ssMatrixY.push(rnd(0,64));ssMatrixLast=Date.now();}
+  else if(mode===5){ssParticles=[];for(let i=0;i<20;i++) ssParticles.push({x:0,y:0,dx:0,dy:0,active:false});ssFireLast=Date.now();}
+  else if(mode===6){ssRipples=[];for(let i=0;i<4;i++) ssRipples.push({cx:0,cy:0,r:0,active:false});ssRippleLast=Date.now();}
+  else if(mode===7){ssMazeWalls=[];ssMazeVisited=[];for(let y2=0;y2<MAZE_ROWS;y2++){ssMazeWalls.push(new Uint8Array(MAZE_COLS));ssMazeVisited.push(new Array(MAZE_COLS).fill(false));}ssMazeStkX=[0];ssMazeStkY=[0];ssMazeStkTop=1;ssMazeVisited[0][0]=true;ssMazeGenDone=false;ssMazeLast=Date.now();ssMazeCurX=0;ssMazeCurY=0;ssMazeCurDir=0;ssMazeCurLast=Date.now();}
+  else if(mode===8){ssPlasmaT=0;ssPlasmeLast=Date.now();}
+  else if(mode===9){ssClockSec=0;ssClockLast=Date.now();}
+  else if(mode===10){ssLissT=0;ssLissLast=Date.now();ssLissHead=0;ssLissX=new Array(80).fill(64);ssLissY=new Array(80).fill(32);}
+  else if(mode===11){ssSpiralT=0;ssSpiralLast=Date.now();}
+  else if(mode===12){ssWarpStars=[];for(let i=0;i<60;i++) ssWarpStars.push({x:rndF(-100,100),y:rndF(-50,50),z:rnd(1,100)});ssWarpLast=Date.now();}
+  else if(mode===13){ssEqH=[];ssEqTarget=[];for(let i=0;i<16;i++){ssEqH.push(rnd(2,30));ssEqTarget.push(rnd(2,45));}ssEqLast=Date.now();}
+  else if(mode===14){ssGolGrid=[];ssGolNext=[];for(let y2=0;y2<GOL_H;y2++){ssGolGrid.push(new Uint8Array(GOL_W));ssGolNext.push(new Uint8Array(GOL_W));}for(let y2=0;y2<GOL_H;y2++) for(let x2=0;x2<GOL_W;x2++) ssGolGrid[y2][x2]=rnd(0,3)===0?1:0;ssGolLast=Date.now();ssGolGen=0;}
+  else if(mode===15){ssSandGrid2=[];for(let y2=0;y2<SAND_GH;y2++) ssSandGrid2.push(new Array(SAND_GW).fill(false));ssSandLast=Date.now();ssSandSpawn=0;}
+  else if(mode===16){ssPendA1=2.0;ssPendA2=2.5;ssPendV1=0;ssPendV2=0;ssPendTX=new Array(60).fill(64);ssPendTY=new Array(60).fill(20);ssPendTHead=0;ssPendLast=Date.now();}
+}
+function updateDrawScreensaver(mode) {
+  const now=Date.now();
+  if(mode===0){clearBuf();for(let b of ssBalls){b.x+=b.dx;b.y+=b.dy;if(b.x-b.r<=0){b.x=b.r;b.dx=Math.abs(b.dx);}if(b.x+b.r>=127){b.x=127-b.r;b.dx=-Math.abs(b.dx);}if(b.y-b.r<=0){b.y=b.r;b.dy=Math.abs(b.dy);}if(b.y+b.r>=63){b.y=63-b.r;b.dy=-Math.abs(b.dy);}drawCircle(Math.round(b.x),Math.round(b.y),b.r,1);fillCircle(Math.round(b.x),Math.round(b.y),b.r-1,1);}flushDisplay();}
+  else if(mode===1){clearBuf();for(let i=0;i<16;i++){let xpos=i*8+4;ssRainY[i]+=3;if(ssRainY[i]>64+ssRainLen[i]){ssRainY[i]=-ssRainLen[i];ssRainLen[i]=rnd(4,14);}for(let d=0;d<ssRainLen[i];d++){let py=ssRainY[i]-d;if(py>=0&&py<64)drawPixel(xpos,py,1);}}flushDisplay();}
+  else if(mode===2){clearBuf();for(let s of ssStars){s.x-=s.speed;if(s.x<0){s.x=127;s.y=rnd(0,64);}drawPixel(s.x,s.y,1);if(s.speed>=2)drawPixel(s.x+1,s.y,1);if(s.speed===3)drawPixel(s.x+2,s.y,1);}flushDisplay();}
+  else if(mode===3){if(now-ssSnakeLast>120){ssSnakeLast=now;let hx=ssSnakeX[0],hy=ssSnakeY[0];let ddx=ssSnakeFoodX-hx,ddy=ssSnakeFoodY-hy;if(Math.abs(ddx)>Math.abs(ddy)) ssSnakeDir=(ddx>0)?0:2;else ssSnakeDir=(ddy>0)?1:3;for(let i=ssSnakeLen-1;i>0;i--){ssSnakeX[i]=ssSnakeX[i-1];ssSnakeY[i]=ssSnakeY[i-1];}if(ssSnakeDir===0)ssSnakeX[0]+=4;else if(ssSnakeDir===1)ssSnakeY[0]+=4;else if(ssSnakeDir===2)ssSnakeX[0]-=4;else ssSnakeY[0]-=4;ssSnakeX[0]=((ssSnakeX[0]%128)+128)%128;ssSnakeY[0]=((ssSnakeY[0]%64)+64)%64;if(Math.abs(ssSnakeX[0]-ssSnakeFoodX)<5&&Math.abs(ssSnakeY[0]-ssSnakeFoodY)<5){ssSnakeFoodX=rnd(5,120);ssSnakeFoodY=rnd(5,58);if(ssSnakeLen<30)ssSnakeLen++;}clearBuf();for(let i=0;i<ssSnakeLen;i++) fillRect(ssSnakeX[i]-2,ssSnakeY[i]-2,4,4,1);fillRect(ssSnakeFoodX-1,ssSnakeFoodY-1,3,3,1);flushDisplay();}}
+  else if(mode===4){if(now-ssMatrixLast>80){ssMatrixLast=now;clearBuf();setTextSize(1);setTextColor(1);for(let i=0;i<16;i++){ssMatrixY[i]+=8;if(ssMatrixY[i]>64)ssMatrixY[i]=rnd(-20,0);for(let j=0;j<4;j++){let ypos=ssMatrixY[i]-j*8;if(ypos>=0&&ypos<64){let c=String.fromCharCode(48+rnd(0,10));setCursor(i*8,ypos);print(c);}}}flushDisplay();}}
+  else if(mode===5){if(now-ssFireLast>600){ssFireLast=now;let cx2=rnd(20,108),cy2=rnd(10,40),count=0;for(let i=0;i<20&&count<8;i++){if(!ssParticles[i].active){ssParticles[i].active=true;ssParticles[i].x=cx2;ssParticles[i].y=cy2;let angle=count*Math.PI*2/8,speed=1.5+rnd(0,10)*0.15;ssParticles[i].dx=Math.cos(angle)*speed;ssParticles[i].dy=Math.sin(angle)*speed;count++;}}}clearBuf();for(let p of ssParticles){if(p.active){p.x+=p.dx;p.y+=p.dy;p.dy+=0.08;if(p.x<0||p.x>127||p.y>63) p.active=false;else drawPixel(Math.round(p.x),Math.round(p.y),1);}}flushDisplay();}
+  else if(mode===6){if(now-ssRippleLast>700){ssRippleLast=now;for(let r of ssRipples){if(!r.active){r.cx=rnd(20,108);r.cy=rnd(10,54);r.r=1;r.active=true;break;}}}clearBuf();for(let r of ssRipples){if(r.active){drawCircle(r.cx,r.cy,r.r,1);if(r.r>2)drawCircle(r.cx,r.cy,r.r-2,1);r.r+=2;if(r.r>40)r.active=false;}}flushDisplay();}
+  else if(mode===7){if(!ssMazeGenDone&&now-ssMazeLast>10){ssMazeLast=now;for(let step=0;step<4&&!ssMazeGenDone;step++){if(ssMazeStkTop===0){ssMazeGenDone=true;break;}let cx2=ssMazeStkX[ssMazeStkTop-1],cy2=ssMazeStkY[ssMazeStkTop-1];let dirs=[0,1,2,3];for(let i=3;i>0;i--){let j=rnd(0,i+1);let t=dirs[i];dirs[i]=dirs[j];dirs[j]=t;}let found=false;for(let d of dirs){let nx2=cx2,ny2=cy2;if(d===0)nx2++;else if(d===1)ny2++;else if(d===2)nx2--;else ny2--;if(nx2>=0&&nx2<MAZE_COLS&&ny2>=0&&ny2<MAZE_ROWS&&!ssMazeVisited[ny2][nx2]){if(d===0)ssMazeWalls[cy2][cx2]|=0x01;else if(d===1)ssMazeWalls[cy2][cx2]|=0x02;else if(d===2)ssMazeWalls[ny2][nx2]|=0x01;else ssMazeWalls[ny2][nx2]|=0x02;ssMazeVisited[ny2][nx2]=true;ssMazeStkX[ssMazeStkTop]=nx2;ssMazeStkY[ssMazeStkTop]=ny2;ssMazeStkTop++;found=true;break;}}if(!found)ssMazeStkTop--;}clearBuf();for(let gy=0;gy<MAZE_ROWS;gy++)for(let gx=0;gx<MAZE_COLS;gx++){let px2=gx*8,py2=gy*8;if(!(ssMazeWalls[gy][gx]&0x01)&&gx<MAZE_COLS-1)drawLine(px2+8,py2,px2+8,py2+8,1);if(!(ssMazeWalls[gy][gx]&0x02)&&gy<MAZE_ROWS-1)drawLine(px2,py2+8,px2+8,py2+8,1);}drawRect(0,0,128,64,1);flushDisplay();}if(ssMazeGenDone){if(now-ssMazeCurLast>80){ssMazeCurLast=now;for(let t=0;t<4;t++){let nx2=ssMazeCurX,ny2=ssMazeCurY,canGo=false;if(ssMazeCurDir===0){nx2++;canGo=(nx2<MAZE_COLS)&&!!(ssMazeWalls[ssMazeCurY][ssMazeCurX]&0x01);}else if(ssMazeCurDir===1){ny2++;canGo=(ny2<MAZE_ROWS)&&!!(ssMazeWalls[ssMazeCurY][ssMazeCurX]&0x02);}else if(ssMazeCurDir===2){nx2--;canGo=(nx2>=0)&&!!(ssMazeWalls[ssMazeCurY][nx2]&0x01);}else{ny2--;canGo=(ny2>=0)&&!!(ssMazeWalls[ny2][ssMazeCurX]&0x02);}if(canGo){ssMazeCurX=nx2;ssMazeCurY=ny2;break;}ssMazeCurDir=rnd(0,4);}}clearBuf();for(let gy=0;gy<MAZE_ROWS;gy++)for(let gx=0;gx<MAZE_COLS;gx++){let px2=gx*8,py2=gy*8;if(!(ssMazeWalls[gy][gx]&0x01)&&gx<MAZE_COLS-1)drawLine(px2+8,py2,px2+8,py2+8,1);if(!(ssMazeWalls[gy][gx]&0x02)&&gy<MAZE_ROWS-1)drawLine(px2,py2+8,px2+8,py2+8,1);}drawRect(0,0,128,64,1);fillRect(ssMazeCurX*8+2,ssMazeCurY*8+2,4,4,1);flushDisplay();}}
+  else if(mode===8){if(now-ssPlasmeLast>60){ssPlasmeLast=now;ssPlasmaT+=0.18;clearBuf();for(let gy=0;gy<4;gy++)for(let gx=0;gx<8;gx++){let cx2=gx*16+8,cy2=gy*16+8;let v=Math.sin(cx2*0.05+ssPlasmaT)+Math.sin(cy2*0.08+ssPlasmaT*0.7)+Math.sin((cx2+cy2)*0.04+ssPlasmaT*1.3);let density=Math.round((v+3.0)/6.0*5);const bayer=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];for(let dy=0;dy<16;dy++)for(let dx=0;dx<16;dx++){if(density*3>bayer[dy&3][dx&3]) drawPixel(gx*16+dx,gy*16+dy,1);}}flushDisplay();}}
+  else if(mode===9){if(now-ssClockLast>50){ssClockLast=now;ssClockSec+=0.5;if(ssClockSec>=60)ssClockSec=0;clearBuf();let ccx=64,ccy=32,r=28;drawCircle(ccx,ccy,r,1);drawCircle(ccx,ccy,r-1,1);for(let h=0;h<12;h++){let a=h*Math.PI*2/12-Math.PI/2;drawLine(ccx+Math.round(Math.cos(a)*(r-2)),ccy+Math.round(Math.sin(a)*(r-2)),ccx+Math.round(Math.cos(a)*(r-5)),ccy+Math.round(Math.sin(a)*(r-5)),1);}let sa=ssClockSec/60*Math.PI*2-Math.PI/2;drawLine(ccx,ccy,ccx+Math.round(Math.cos(sa)*(r-4)),ccy+Math.round(Math.sin(sa)*(r-4)),1);let ma=(ssClockSec/4.0)/60*Math.PI*2-Math.PI/2,mlen=r-8;drawLine(ccx,ccy,ccx+Math.round(Math.cos(ma)*mlen),ccy+Math.round(Math.sin(ma)*mlen),1);drawLine(ccx+1,ccy,ccx+1+Math.round(Math.cos(ma)*mlen),ccy+Math.round(Math.sin(ma)*mlen),1);let ha=(ssClockSec/12.0)/60*Math.PI*2-Math.PI/2,hlen=r-13;drawLine(ccx,ccy,ccx+Math.round(Math.cos(ha)*hlen),ccy+Math.round(Math.sin(ha)*hlen),1);fillCircle(ccx,ccy,2,1);flushDisplay();}}
+  else if(mode===10){if(now-ssLissLast>30){ssLissLast=now;ssLissT+=0.07;let lx=64+55*Math.sin(3.0*ssLissT+0.785),ly=32+28*Math.sin(2.0*ssLissT);ssLissX[ssLissHead]=Math.round(lx);ssLissY[ssLissHead]=Math.round(ly);ssLissHead=(ssLissHead+1)%80;clearBuf();for(let i=0;i<80;i++){let idx=(ssLissHead+i)%80;if(i>20||(i%2===0))drawPixel(ssLissX[idx],ssLissY[idx],1);if(i>50)drawPixel(ssLissX[idx]+1,ssLissY[idx],1);}flushDisplay();}}
+  else if(mode===11){if(now-ssSpiralLast>25){ssSpiralLast=now;ssSpiralT+=0.15;clearBuf();for(let arm=0;arm<3;arm++){let offset=arm*Math.PI*2/3;for(let t=0;t<8*Math.PI;t+=0.12){let r2=t*3.8;if(r2>31)break;let angle=t+ssSpiralT+offset;let px2=64+Math.round(Math.cos(angle)*r2),py2=32+Math.round(Math.sin(angle)*r2);if(px2>=0&&px2<128&&py2>=0&&py2<64){drawPixel(px2,py2,1);if(t>1&&px2+1<128)drawPixel(px2+1,py2,1);}}}flushDisplay();}}
+  else if(mode===12){if(now-ssWarpLast>30){ssWarpLast=now;clearBuf();for(let s of ssWarpStars){s.z-=2.5;if(s.z<=0){s.x=rndF(-100,100);s.y=rndF(-50,50);s.z=100;}let fz=s.z/100;let sx2=64+Math.round(s.x/fz*0.6),sy2=32+Math.round(s.y/fz*0.6);if(sx2<0||sx2>=128||sy2<0||sy2>=64){s.z=100;continue;}let sz2=Math.round((1-fz)*3)+1;if(sz2===1)drawPixel(sx2,sy2,1);else fillCircle(sx2,sy2,sz2-1,1);if(s.z<60){let fz2=(s.z+5)/100;let ox=64+Math.round(s.x/fz2*0.6),oy=32+Math.round(s.y/fz2*0.6);drawLine(ox,oy,sx2,sy2,1);}}flushDisplay();}}
+  else if(mode===13){if(now-ssEqLast>80){ssEqLast=now;clearBuf();for(let i=0;i<16;i++){if(ssEqH[i]<ssEqTarget[i])ssEqH[i]+=rnd(1,4);else if(ssEqH[i]>ssEqTarget[i])ssEqH[i]-=rnd(1,3);if(Math.abs(ssEqH[i]-ssEqTarget[i])<3)ssEqTarget[i]=rnd(2,50);let h2=Math.max(2,Math.min(ssEqH[i],50));fillRect(i*8+1,62-h2,6,h2,1);if(62-h2>=2)drawLine(i*8+1,62-h2-2,i*8+6,62-h2-2,1);}drawLine(0,63,127,63,1);flushDisplay();}}
+  else if(mode===14){if(now-ssGolLast>150){ssGolLast=now;ssGolGen++;for(let y2=0;y2<GOL_H;y2++)for(let x2=0;x2<GOL_W;x2++){let n=0;for(let dy=-1;dy<=1;dy++)for(let dx=0+(-1);dx<=1;dx++){if(dx===0&&dy===0)continue;let nx2=(x2+dx+GOL_W)%GOL_W,ny2=(y2+dy+GOL_H)%GOL_H;n+=ssGolGrid[ny2][nx2];}ssGolNext[y2][x2]=ssGolGrid[y2][x2]?(n===2||n===3?1:0):(n===3?1:0);}for(let y2=0;y2<GOL_H;y2++) ssGolGrid[y2].set(ssGolNext[y2]);let alive=0;for(let y2=0;y2<GOL_H;y2++)for(let x2=0;x2<GOL_W;x2++)alive+=ssGolGrid[y2][x2];if(alive<10||ssGolGen>200){for(let y2=0;y2<GOL_H;y2++)for(let x2=0;x2<GOL_W;x2++)ssGolGrid[y2][x2]=rnd(0,3)===0?1:0;ssGolGen=0;}clearBuf();for(let y2=0;y2<GOL_H;y2++)for(let x2=0;x2<GOL_W;x2++)if(ssGolGrid[y2][x2])fillRect(x2*4,y2*4,3,3,1);flushDisplay();}}
+  else if(mode===15){if(now-ssSandLast>40){ssSandLast=now;if(ssSandSpawn<SAND_GW*SAND_GH/3){let sx2=rnd(Math.floor(SAND_GW/3),Math.floor(SAND_GW*2/3));if(!ssSandGrid2[0][sx2]){ssSandGrid2[0][sx2]=true;ssSandSpawn++;}}for(let y2=SAND_GH-2;y2>=0;y2--){for(let x2=0;x2<SAND_GW;x2++){if(!ssSandGrid2[y2][x2]) continue;if(!ssSandGrid2[y2+1][x2]){ssSandGrid2[y2+1][x2]=true;ssSandGrid2[y2][x2]=false;}else{let side=rnd(0,2)?1:-1;let nx2=x2+side;if(nx2>=0&&nx2<SAND_GW&&!ssSandGrid2[y2+1][nx2]){ssSandGrid2[y2+1][nx2]=true;ssSandGrid2[y2][x2]=false;}else{nx2=x2-side;if(nx2>=0&&nx2<SAND_GW&&!ssSandGrid2[y2+1][nx2]){ssSandGrid2[y2+1][nx2]=true;ssSandGrid2[y2][x2]=false;}}}}}clearBuf();for(let y2=0;y2<SAND_GH;y2++)for(let x2=0;x2<SAND_GW;x2++)if(ssSandGrid2[y2][x2])fillRect(x2*2,y2*2,2,2,1);flushDisplay();}}
+  else if(mode===16){if(now-ssPendLast>20){ssPendLast=now;let g=9.8,l1=1,l2=1,dt=0.05;let d=ssPendA1-ssPendA2,sd=Math.sin(d),cd=Math.cos(d),s1=Math.sin(ssPendA1),s2=Math.sin(ssPendA2);let denom=2-cd*cd;let acc1=(-g*(2*s1+s2*cd)-Math.sin(d)*(ssPendV2*ssPendV2*l2+ssPendV1*ssPendV1*l1*cd))/(l1*denom);let acc2=((2*s1*cd+2*s2)*g+Math.sin(d)*(2*ssPendV1*ssPendV1*l1+ssPendV2*ssPendV2*l2*cd))/(l2*denom);ssPendV1+=acc1*dt;ssPendV2+=acc2*dt;ssPendV1*=0.999;ssPendV2*=0.999;ssPendA1+=ssPendV1*dt;ssPendA2+=ssPendV2*dt;let px0=64,py0=10,L=22;let x1=px0+Math.round(Math.sin(ssPendA1)*L),y1=py0+Math.round(Math.cos(ssPendA1)*L);let x2=x1+Math.round(Math.sin(ssPendA2)*L),y2=y1+Math.round(Math.cos(ssPendA2)*L);ssPendTX[ssPendTHead]=x2;ssPendTY[ssPendTHead]=y2;ssPendTHead=(ssPendTHead+1)%60;clearBuf();for(let i=0;i<60;i++){let idx=(ssPendTHead+i)%60;if(i>10)drawPixel(ssPendTX[idx],ssPendTY[idx],1);if(i>40)drawPixel(ssPendTX[idx]+1,ssPendTY[idx],1);}drawLine(px0,py0,x1,y1,1);drawLine(px0+1,py0,x1+1,y1,1);drawLine(x1,y1,x2,y2,1);drawLine(x1+1,y1,x2+1,y2,1);fillCircle(px0,py0,2,1);fillCircle(x1,y1,3,1);fillCircle(x2,y2,4,1);flushDisplay();}}
+}
+let lastBlinkTime=0;
+function mainLoop() {
+  const now = Date.now();
+  if (inScreenOff) { return; }
+  if (inFaceManager) { drawFaceManager(); return; }
+  if (inMediaMenu) { drawMediaMenu(); return; }
+  if (inSettingsMenu) { drawSettingsMenu(); return; }
+  if (inSensors) {
+    if(now-lastUpdate>2000){currentTemp=20+Math.random()*15;currentPressure=1000+rnd(0,40);lastUpdate=now;}
+    drawSensors(); return;
+  }
+  if (inStopwatch) { drawStopwatch(); return; }
+  if (inPong) { updatePong(); drawPong(); return; }
+  if (inXO) {
+    if(xoAiThinking&&!xoGameOver&&now>=xoAiDelay){
+      xoAiThinking=false;let mv=xoAiMove();
+      if(mv>=0){xoBoard[mv]=2;xoWinner=xoCheckWinner();
+        if(xoWinner)xoGameOver=true;else{xoPlayerTurn=true;xoCursor=0;while(xoCursor<9&&xoBoard[xoCursor])xoCursor++;}}
+    }
+    drawXO(); return;
+  }
+  if (inScreensaver) {
+    if(ssSelecting){drawScreensaverSelection();}
+    else{updateDrawScreensaver(screensaverMode);}
+    return;
+  }
+  if (menuState === 0) {
+    clearBuf();
+    if (Math.abs(currentX-targetX)>0.5||Math.abs(currentY-targetY)>0.5) {
+      currentX+=(targetX-currentX)*0.1;currentY+=(targetY-currentY)*0.1;
+    } else if (now-lastUpdate>3000) {
+      targetX=rnd(-10,11);targetY=rnd(-6,7);lastUpdate=now;
+    }
+    drawEyeShape(baseLeftX+Math.round(currentX), baseY+Math.round(currentY), eyeHeight);
+    drawEyeShape(baseRightX+Math.round(currentX), baseY+Math.round(currentY), eyeHeight);
+    drawFaceExtras(0);
+    if(eyeExpression===0&&now-lastBlinkTime>(8000+rnd(0,4000))){
+      lastBlinkTime=now;
+      for(let h=eyeHeight;h>=2;h-=12){clearBuf();drawEyeShape(baseLeftX+Math.round(currentX),baseY+Math.round(currentY),h);drawEyeShape(baseRightX+Math.round(currentX),baseY+Math.round(currentY),h);flushDisplay();}
+      for(let h=2;h<=eyeHeight;h+=12){clearBuf();drawEyeShape(baseLeftX+Math.round(currentX),baseY+Math.round(currentY),h);drawEyeShape(baseRightX+Math.round(currentX),baseY+Math.round(currentY),h);flushDisplay();}
+    }
+    flushDisplay();
+  } else if (menuState === 1) {
+    clearBuf();
+    drawLauncherTile(launcherTile, launcherApp, 0);
+    flushDisplay();
+  }
+}
+clearBuf();
+drawEyeShape(baseLeftX, baseY, eyeHeight);
+drawEyeShape(baseRightX, baseY, eyeHeight);
+flushDisplay();
+updateBadge();
+setInterval(mainLoop, 33);
+const _btn = document.getElementById('touchBtn');
+_btn.addEventListener('touchstart', function(e) { e.preventDefault(); touchDown(); }, { passive: false });
+_btn.addEventListener('touchend',   function(e) { e.preventDefault(); touchUp();   }, { passive: false });
+_btn.addEventListener('touchcancel',function(e) { e.preventDefault(); touchUp();   }, { passive: false });
+document.addEventListener('keydown', e => { if(e.code==='Space'||e.code==='Enter'){e.preventDefault();touchDown();} });
+document.addEventListener('keyup',   e => { if(e.code==='Space'||e.code==='Enter'){e.preventDefault();touchUp();} });
+</script>
+</body>
+</html>
